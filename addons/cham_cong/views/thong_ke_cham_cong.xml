@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_thong_ke_cham_cong_tree" model="ir.ui.view">
+        <field name="name">thong_ke_cham_cong.tree</field>
+        <field name="model">thong_ke_cham_cong</field>
+        <field name="arch" type="xml">
+            <tree string="Thống kê chấm công">
+                <field name="nhan_vien_id"/>
+                <field name="phong_ban_id"/>
+                <field name="ngay"/>
+                <field name="so_ngay_cong"/>
+                <field name="so_ngay_di_muon"/>
+                <field name="so_ngay_ve_som"/>
+                <field name="so_ngay_nghi"/>
+                <field name="so_gio_trung_binh"/>
+                <field name="so_gio_lam_them"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Graph Views -->
+    <record id="view_thong_ke_cham_cong_graph" model="ir.ui.view">
+        <field name="name">thong_ke_cham_cong.graph</field>
+        <field name="model">thong_ke_cham_cong</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <graph string="Thống kê chấm công" type="bar" sample="1">
+                <field name="nhan_vien_id"/>
+                <field name="so_ngay_cong" type="measure"/>
+                <field name="so_ngay_di_muon" type="measure"/>
+                <field name="so_ngay_ve_som" type="measure"/>
+                <field name="so_ngay_nghi" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_thong_ke_cham_cong_graph_phong_ban" model="ir.ui.view">
+        <field name="name">thong_ke_cham_cong.graph.phong.ban</field>
+        <field name="model">thong_ke_cham_cong</field>
+        <field name="arch" type="xml">
+            <graph string="Thống kê chấm công theo phòng ban" type="bar">
+                <field name="phong_ban_id" type="col"/>
+                <field name="so_nhan_vien_di_lam" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_thong_ke_cham_cong_graph_pie" model="ir.ui.view">
+        <field name="name">thong_ke_cham_cong.graph.pie</field>
+        <field name="model">thong_ke_cham_cong</field>
+        <field name="arch" type="xml">
+            <graph string="Tỷ lệ chấm công" type="pie">
+                <field name="phong_ban_id" type="row"/>
+                <field name="so_nhan_vien_di_lam" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_thong_ke_cham_cong_line" model="ir.ui.view">
+        <field name="name">thong_ke_cham_cong.line</field>
+        <field name="model">thong_ke_cham_cong</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <graph string="Xu hướng chấm công" type="line" sample="1">
+                <field name="ngay"/>
+                <field name="so_nhan_vien_di_lam" type="measure"/>
+                <field name="so_nhan_vien_nghi" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Biểu mẫu thống kê chấm công -->
+    <record id="view_thong_ke_cham_cong_form" model="ir.ui.view">
+        <field name="name">thong_ke_cham_cong.form</field>
+        <field name="model">thong_ke_cham_cong</field>
+        <field name="arch" type="xml">
+            <form string="Thống kê chấm công">
+                <sheet>
+                    <group>
+                        <field name="nhan_vien_id"/>
+                        <field name="phong_ban_id" readonly="1"/>
+                        <field name="ngay"/>
+                        <field name="thang"/>
+                        <field name="nam"/>
+                    </group>
+                    <group>
+                        <group string="Thống kê cá nhân">
+                            <field name="so_ngay_cong"/>
+                            <field name="so_ngay_di_muon"/>
+                            <field name="so_ngay_ve_som"/>
+                            <field name="so_ngay_nghi"/>
+                            <field name="so_gio_trung_binh"/>
+                            <field name="so_gio_lam_them"/>
+                        </group>
+                        <group string="Thống kê phòng ban">
+                            <field name="tong_so_nhan_vien"/>
+                            <field name="so_nhan_vien_di_lam"/>
+                            <field name="so_nhan_vien_nghi"/>
+                            <field name="ti_le_di_lam"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tìm kiếm thống kê chấm công -->
+    <record id="view_thong_cham_cong_search" model="ir.ui.view">
+        <field name="name">thong_ke_cham_cong.search</field>
+        <field name="model">thong_ke_cham_cong</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm thống kê chấm công">
+                <field name="nhan_vien_id"/>
+                <field name="phong_ban_id"/>
+                <field name="ngay"/>
+                <field name="thang"/>
+                <field name="nam"/>
+                <group string="Bộ lọc">
+                    <filter name="filter_thang" string="Theo tháng" domain="[('thang', '=', context_today().month)]"/>
+                    <filter name="filter_nam" string="Theo năm" domain="[('nam', '=', context_today().year)]"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Nhân viên" name="nhan_vien" context="{'group_by': 'nhan_vien_id'}"/>
+                    <filter string="Phòng ban" name="phong_ban" context="{'group_by': 'phong_ban_id'}"/>
+                    <filter string="Ngày" name="ngay" context="{'group_by': 'ngay'}"/>
+                    <filter string="Tuần" name="tuan" context="{'group_by': 'ngay:week'}"/>
+                    <filter string="Tháng" name="thang" context="{'group_by': 'thang'}"/>
+                    <filter string="Năm" name="nam" context="{'group_by': 'nam'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Hành động mở danh sách thống kê chấm công -->
+    <record id="action_thong_ke_cham_cong" model="ir.actions.act_window">
+        <field name="name">Thống kê chấm công</field>
+        <field name="res_model">thong_ke_cham_cong</field>
+        <field name="view_mode">tree,graph,form</field>
+        <field name="view_id" ref="view_thong_ke_cham_cong_tree"/>
+        <field name="search_view_id" ref="view_thong_cham_cong_search"/>
+        <field name="context">{'graph_measure': 'so_ngay_cong'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có dữ liệu thống kê chấm công
+            </p>
+        </field>
+    </record>
+</odoo>

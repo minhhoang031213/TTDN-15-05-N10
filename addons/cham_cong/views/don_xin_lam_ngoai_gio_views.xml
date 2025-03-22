@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_don_xin_lam_ngoai_gio_tree" model="ir.ui.view">
+        <field name="name">don.xin.lam.ngoai.gio.tree</field>
+        <field name="model">don.xin.lam.ngoai.gio</field>
+        <field name="arch" type="xml">
+            <tree string="Đơn xin làm ngoài giờ">
+                <field name="nhan_vien_id"/>
+                <field name="phong_ban_id"/>
+                <field name="ngay_lam"/>
+                <field name="gio_bat_dau"/>
+                <field name="gio_ket_thuc"/>
+                <field name="ly_do"/>
+                <field name="trang_thai"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_don_xin_lam_ngoai_gio_form" model="ir.ui.view">
+        <field name="name">don.xin.lam.ngoai.gio.form</field>
+        <field name="model">don.xin.lam.ngoai.gio</field>
+        <field name="arch" type="xml">
+            <form string="Đơn xin làm ngoài giờ">
+                <header>
+                    <button name="action_submit" string="Gửi đơn" type="object" class="oe_highlight" 
+                            attrs="{'invisible': [('trang_thai', '!=', 'draft')]}"/>
+                    <button name="action_approve" string="Phê duyệt" type="object" class="oe_highlight"
+                            groups="cham_cong.group_cham_cong_manager"
+                            attrs="{'invisible': [('trang_thai', '!=', 'submitted')]}"/>
+                    <button name="action_reject" string="Từ chối" type="object" 
+                            groups="cham_cong.group_cham_cong_manager"
+                            attrs="{'invisible': [('trang_thai', '!=', 'submitted')]}"/>
+                    <field name="trang_thai" widget="statusbar" 
+                           statusbar_visible="draft,submitted,approved,rejected"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="nhan_vien_id" attrs="{'readonly': [('trang_thai', '!=', 'draft')]}"/>
+                            <field name="phong_ban_id" readonly="1"/>
+                            <field name="ngay_lam" attrs="{'readonly': [('trang_thai', '!=', 'draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="gio_bat_dau" attrs="{'readonly': [('trang_thai', '!=', 'draft')]}"/>
+                            <field name="gio_ket_thuc" attrs="{'readonly': [('trang_thai', '!=', 'draft')]}"/>
+                            <field name="so_gio" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lý do">
+                            <field name="ly_do" attrs="{'readonly': [('trang_thai', '!=', 'draft')]}"/>
+                        </page>
+                        <page string="Phê duyệt" groups="cham_cong.group_cham_cong_manager">
+                            <group>
+                               
+                                <field name="ngay_duyet" readonly="1"/>
+                                <field name="ghi_chu"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_don_xin_lam_ngoai_gio_search" model="ir.ui.view">
+        <field name="name">don.xin.lam.ngoai.gio.search</field>
+        <field name="model">don.xin.lam.ngoai.gio</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm đơn xin làm ngoài giờ">
+                <field name="nhan_vien_id"/>
+                <field name="phong_ban_id"/>
+                <field name="ngay_lam"/>
+                <field name="ly_do"/>
+                <separator/>
+                
+                <filter string="Chờ duyệt" name="to_approve" domain="[('trang_thai', '=', 'submitted')]"/>
+                <filter string="Đã duyệt" name="approved" domain="[('trang_thai', '=', 'approved')]"/>
+                <filter string="Đã từ chối" name="rejected" domain="[('trang_thai', '=', 'rejected')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Nhân viên" name="group_by_employee" context="{'group_by': 'nhan_vien_id'}"/>
+                    <filter string="Phòng ban" name="group_by_department" context="{'group_by': 'phong_ban_id'}"/>
+                    <filter string="Trạng thái" name="group_by_state" context="{'group_by': 'trang_thai'}"/>
+                    <filter string="Ngày làm" name="group_by_date" context="{'group_by': 'ngay_lam'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_don_xin_lam_ngoai_gio" model="ir.actions.act_window">
+        <field name="name">Đơn xin làm ngoài giờ</field>
+        <field name="res_model">don.xin.lam.ngoai.gio</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_don_xin_lam_ngoai_gio_search"/>
+        <field name="context">{'search_default_my_requests': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo đơn xin làm ngoài giờ mới
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_don_xin_lam_ngoai_gio_tree"
+              name="Đơn xin làm ngoài giờ"
+              parent="menu_quan_ly_don"
+              action="action_don_xin_lam_ngoai_gio"
+              sequence="8"/>
+
+</odoo> 

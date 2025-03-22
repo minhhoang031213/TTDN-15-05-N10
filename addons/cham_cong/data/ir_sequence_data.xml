@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence for Overtime Request -->
+        <record id="seq_don_xin_lam_ngoai_gio" model="ir.sequence">
+            <field name="name">Đơn xin làm ngoài giờ</field>
+            <field name="code">don.xin.lam.ngoai.gio</field>
+            <field name="prefix">OT/%(year)s/%(month)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence for Salary Calculation -->
+        <record id="seq_tinh_luong" model="ir.sequence">
+            <field name="name">Bảng lương</field>
+            <field name="code">tinh.luong</field>
+            <field name="prefix">SAL/%(year)s/%(month)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo> 
